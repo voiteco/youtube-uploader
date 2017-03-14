@@ -128,7 +128,7 @@ public class YoutubeUploader {
                 YouTube.PlaylistItems.Insert playlistItemsInsertCommand = youtube.playlistItems().insert("snippet", playlistItem);
                 PlaylistItem returnedPlaylistItem = playlistItemsInsertCommand.execute();
 
-                System.out.println(String.format("File: %s. Added to playlist: %s", fileInfo.getName(), returnedPlaylistItem.getSnippet().getTitle()));
+                System.out.println(String.format("File: %s. Added to playlist: %s", fileInfo.getName(), playlist.getSnippet().getTitle()));
             }
 
         } catch (GoogleJsonResponseException e) {
