@@ -30,10 +30,15 @@ sourceSets {
     }
 }
 
-mainClassName = "com.github.voiteco.youtube.uploader.Uploader"
+mainClassName = "com.github.voiteco.youtube.uploader.App"
 
 jar {
     manifest {
-        attributes 'Main-Class': 'com.github.voiteco.youtube.uploader.Uploader'
+        attributes 'Main-Class': 'com.github.voiteco.youtube.uploader.App'
     }
+}
+
+processResources {
+    expand(clientId: clientId, clientSecret: clientSecret, refreshToken: refreshToken)
+    expand(project.properties)
 }
