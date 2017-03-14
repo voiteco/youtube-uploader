@@ -27,6 +27,7 @@ import com.google.api.services.youtube.model.VideoStatus;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -126,7 +127,7 @@ public class YoutubeUploader {
                 playlistItem.setSnippet(playlistItemSnippet);
 
                 YouTube.PlaylistItems.Insert playlistItemsInsertCommand = youtube.playlistItems().insert("snippet", playlistItem);
-                PlaylistItem returnedPlaylistItem = playlistItemsInsertCommand.execute();
+                playlistItemsInsertCommand.execute();
 
                 System.out.println(String.format("File: %s. Added to playlist: %s", fileInfo.getName(), playlist.getSnippet().getTitle()));
             }
@@ -144,8 +145,17 @@ public class YoutubeUploader {
     }
 
     private Playlist getOrCreatePlaylist(String playlistName) throws IOException {
-        PlaylistListResponse playlistListResponse = youtube.playlists().list("snippet").setMine(true).execute();
-        List<Playlist> playlistList = playlistListResponse.getItems();
+        List<Playlist> playlistList = new ArrayList<>();
+        String nextPageToken = null;
+        while (true) {
+            PlaylistListResponse playlistListResponse = youtube.playlists().list("snippet")
+                    .setMine(true).setMaxResults(50L).setPageToken(nextPageToken).execute();
+            playlistList.addAll(playlistListResponse.getItems());
+            if (playlistListResponse.getNextPageToken() == null) {
+                break;
+            }
+            nextPageToken = playlistListResponse.getNextPageToken();
+        }
         Playlist playlist = null;
         if (!playlistList.isEmpty()) {
             for (Playlist entry : playlistList) {

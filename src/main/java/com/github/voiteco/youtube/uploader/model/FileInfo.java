@@ -24,7 +24,7 @@ public class FileInfo {
         this.tags = new ArrayList<>();
         if (this.name.contains("-")) {
             String[] parts = this.name.split("-");
-            this.playlist = parts[0];
+            this.playlist = parts[0].trim();
             for (String entry : parts) {
                 tags.add(entry.trim());
             }
